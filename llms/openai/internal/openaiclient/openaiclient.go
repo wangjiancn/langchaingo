@@ -157,6 +157,17 @@ func (c *Client) setHeaders(req *http.Request) {
 	}
 }
 
+func (c *Client) setExtraHeaders(req *http.Request, headers http.Header) {
+	if headers == nil {
+		return
+	}
+	for k, v := range headers {
+		for _, vv := range v {
+			req.Header.Add(k, vv)
+		}
+	}
+}
+
 func (c *Client) buildURL(suffix string, model string) string {
 	if IsAzure(c.apiType) {
 		return c.buildAzureURL(suffix, model)

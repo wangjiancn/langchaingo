@@ -1,6 +1,9 @@
 package llms
 
-import "context"
+import (
+	"context"
+	"net/http"
+)
 
 // CallOption is a function that configures a CallOptions.
 type CallOption func(*CallOptions)
@@ -61,6 +64,9 @@ type CallOptions struct {
 	// Metadata is a map of metadata to include in the request.
 	// The meaning of this field is specific to the backend in use.
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	// ExtraHeaders adds additional headers to the request.
+	// This only used for openai client.
+	ExtraHeaders http.Header `json:"-,omitempty"`
 }
 
 // Tool is a tool that can be used by the model.
@@ -263,5 +269,20 @@ func WithJSONMode() CallOption {
 func WithMetadata(metadata map[string]interface{}) CallOption {
 	return func(o *CallOptions) {
 		o.Metadata = metadata
+	}
+}
+
+// WithExtraHeaders will add extra headers to the request.
+func WithExtraHeaders(headers map[string]string) CallOption {
+	return func(o *CallOptions) {
+		if headers == nil {
+			return
+		}
+		if o.ExtraHeaders == nil {
+			o.ExtraHeaders = make(http.Header)
+		}
+		for k, v := range headers {
+			o.ExtraHeaders.Set(k, v)
+		}
 	}
 }

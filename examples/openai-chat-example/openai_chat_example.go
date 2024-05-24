@@ -23,6 +23,7 @@ func main() {
 
 	if _, err := llm.GenerateContent(ctx, content,
 		llms.WithMaxTokens(1024),
+		llms.WithExtraHeaders(map[string]string{"x-trace-id": "4b3b8d432c7d4d9e9f62fe0e3ca7dfd0"}),
 		llms.WithStreamingFunc(func(ctx context.Context, chunk []byte) error {
 			fmt.Print(string(chunk))
 			return nil

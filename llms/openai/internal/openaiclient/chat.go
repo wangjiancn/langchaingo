@@ -59,6 +59,9 @@ type ChatRequest struct {
 	// Deprecated: use ToolChoice instead.
 	FunctionCallBehavior FunctionCallBehavior `json:"function_call,omitempty"`
 
+	// ExtraHeaders adds additional headers to the request.
+	ExtraHeaders http.Header `json:"-,omitempty"`
+
 	// Metadata allows you to specify additional information that will be passed to the model.
 	Metadata map[string]any `json:"metadata,omitempty"`
 }
@@ -337,6 +340,7 @@ func (c *Client) createChat(ctx context.Context, payload *ChatRequest) (*ChatCom
 	}
 
 	c.setHeaders(req)
+	c.setExtraHeaders(req, payload.ExtraHeaders)
 
 	// Send request
 	r, err := c.httpClient.Do(req)
