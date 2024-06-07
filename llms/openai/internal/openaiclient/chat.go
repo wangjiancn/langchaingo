@@ -445,6 +445,12 @@ func combineStreamingChatResponse(
 			return nil, streamResponse.Error
 		}
 
+		if streamResponse.Usage != nil {
+			response.Usage.CompletionTokens = streamResponse.Usage.CompletionTokens
+			response.Usage.PromptTokens = streamResponse.Usage.PromptTokens
+			response.Usage.TotalTokens = streamResponse.Usage.TotalTokens
+		}
+
 		if len(streamResponse.Choices) == 0 {
 			continue
 		}
