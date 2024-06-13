@@ -91,7 +91,14 @@ func (g *Vertex) GenerateContent(
 	}
 
 	var response *llms.ContentResponse
-
+	if messages[0].Role == llms.ChatMessageTypeSystem {
+		parts, err := convertParts(messages[0].Parts)
+		if err != nil {
+			return nil, fmt.Errorf("error converting system message: %w", err)
+		}
+		model.SystemInstruction = &genai.Content{Parts: parts}
+		messages = messages[1:]
+	}
 	if len(messages) == 1 {
 		theMessage := messages[0]
 		if theMessage.Role != llms.ChatMessageTypeHuman {
