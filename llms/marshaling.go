@@ -246,11 +246,12 @@ func (tc *ToolCall) UnmarshalJSON(data []byte) error {
 	var fc FunctionCall
 	fcData, ok := toolCall["function"].(json.RawMessage)
 	if !ok {
-		if b, err := json.Marshal(toolCall["function"]); err != nil {
+		b, err := json.Marshal(toolCall["function"])
+		if err != nil {
 			return err
-		} else {
-			fcData = b
 		}
+		fcData = b
+
 	}
 	if err := json.Unmarshal(fcData, &fc); err != nil {
 		return fmt.Errorf("error unmarshalling function call: %w", err)
