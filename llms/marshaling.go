@@ -245,10 +245,15 @@ func (tc *ToolCall) UnmarshalJSON(data []byte) error {
 	}
 	var fc FunctionCall
 	fcData, ok := toolCall["function"].(json.RawMessage)
-	if ok {
-		if err := json.Unmarshal(fcData, &fc); err != nil {
-			return fmt.Errorf("error unmarshalling function call: %w", err)
+	if !ok {
+		if b, err := json.Marshal(toolCall["function"]); err != nil {
+			return err
+		} else {
+			fcData = b
 		}
+	}
+	if err := json.Unmarshal(fcData, &fc); err != nil {
+		return fmt.Errorf("error unmarshalling function call: %w", err)
 	}
 	tc.ID = id
 	tc.Type = typ
