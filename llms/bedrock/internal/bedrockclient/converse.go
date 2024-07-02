@@ -122,7 +122,7 @@ func mergeSameRoleMessages(messages []llms.MessageContent) ([][]llms.MessageCont
 	currentChunk := make([]llms.MessageContent, 0, len(messages))
 	var lastRole string
 	for _, message := range messages {
-		role, err := getAnthropicRole(message.Role)
+		role, err := getConverseApiRole(message.Role)
 		if err != nil {
 			return nil, err
 		}
